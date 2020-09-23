@@ -58,3 +58,20 @@ Running this script will look something like:
 ./docker_run.sh "<options> -e DISPLAY=<display>" "<image_name>:<image_tag>" "<cmd>"
 ```
 where `"<cmd>"` is optional.
+
+## Security
+In order to limit Docker to binding container ports to the localhost, we can set the default IP when binding container ports (default 0.0.0.0). This is a good security practice, which makes sure that the container isn't opening up ports to the outside world. This can be done by directly interacting with the Docker daemon (`dockerd`), which is the persistent process that manages containers:
+```bash
+dockerd --ip 127.0.0.1
+```
+You may need to use `sudo` to make changes to the daemon. The other option is to edit the `daemon.json` file at Docker->Preferences->Docker Engine by adding the line:
+```json
+{
+   "ip": "127.0.0.1"
+}
+```
+
+Further information about the Docker daemon can be found in the [Docker engine reference](https://docs.docker.com/engine/reference/commandline/dockerd/#daemon-configuration-file).
+
+## Other options
+This repo provides the bare necessities to build and run a Docker image using X11 with some minimal security measures. It does not enable every possible option, nor does it ensure container isolation or seek to avoid all X security leaks. There are many other projects which seek to do this, like [x11docker](https://github.com/mviereck/x11docker).
